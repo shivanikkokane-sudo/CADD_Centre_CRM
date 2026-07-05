@@ -54,7 +54,7 @@ def send_telegram_message(message, centre):
     # Employee based on centre
     if centre == "Dadar":
         print("appending Dadar")
-        chat_ids.append(Sneha_CHAT_ID)
+        chat_ids.append(SNEHA_CHAT_ID)
 
 
     chat_ids = [
