@@ -1,17 +1,17 @@
-name: Followup Reminder Checker
+name: CRM Reminder Engine
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: "*/5 * * * *"
 
   workflow_dispatch:
 
 jobs:
-  run-followup-checker:
+  run-reminder:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -19,13 +19,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-	  cd crm_reminder_engine
-          python -m pip install --upgrade pip
+          cd crm_reminder_engine
           pip install -r requirements.txt
 
-      - name: Run Followup Checker
+      - name: Run reminder engine
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
