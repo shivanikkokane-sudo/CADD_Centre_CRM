@@ -21,7 +21,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
+	  cd crm_reminder_engine
           pip install -r requirements.txt
 
       - name: Run Followup Checker
@@ -30,5 +30,6 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+
         run: |
           python followup_checker.py
