@@ -1,0 +1,4 @@
+.env
+crm_reminder_engine/.env
+__pycache__/
+*.pyc
