@@ -2,7 +2,7 @@ name: Followup Reminder Checker
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # Every 5 minutes
+    - cron: '*/5 * * * *'
 
   workflow_dispatch:
 
@@ -21,8 +21,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-	  cd crm_reminder_engine
-	  python -m pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: Run Followup Checker
@@ -31,6 +30,6 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-
         run: |
+          cd crm_reminder_engine
           python followup_checker.py
