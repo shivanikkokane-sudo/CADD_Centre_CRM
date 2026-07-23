@@ -37,7 +37,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 SNEHA_CHAT_ID = os.getenv("SNEHA_CHAT_ID")
 
 
-
+OFFICE_CHAT_ID = os.getenv("OFFICE_CHAT_ID")
 
 
 
@@ -55,6 +55,7 @@ def send_telegram_message(message, centre):
     if centre == "Dadar":
         print("appending Dadar")
         chat_ids.append(SNEHA_CHAT_ID)
+        chat_ids.append(OFFICE_CHAT_ID)
 
 
     chat_ids = [
