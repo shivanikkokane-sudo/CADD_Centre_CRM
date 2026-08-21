@@ -19,6 +19,7 @@ from flask import (
 from werkzeug.security import generate_password_hash
 
 import web_database as db
+from telegram_notifications import notify_joined, notify_new_enquiry
 
 
 load_dotenv()
@@ -252,6 +253,7 @@ def new_enquiry():
             if can_access(existing):
                 return redirect(url_for("enquiry_detail", enquiry_id=existing["id"]))
         else:
+            notify_new_enquiry(data)
             flash("Enquiry created successfully.", "success")
             return redirect(url_for("enquiry_detail", enquiry_id=enquiry_id))
     return render_template("enquiry_form.html", enquiry=None, counsellors=counsellors)
@@ -344,6 +346,8 @@ def add_followup(enquiry_id):
             joined_course=joined_course,
             joined_course_fee=joined_course_fee,
         )
+        if status == "Joined" and enquiry.get("status") != "Joined":
+            notify_joined(enquiry, joined_course, joined_course_fee, session["full_name"])
         flash("Follow-up saved." + (" Student is now available to the attendance system." if status == "Joined" else ""), "success")
         return redirect(url_for("enquiry_detail", enquiry_id=enquiry_id))
     return render_template("followup_form.html", enquiry=enquiry)

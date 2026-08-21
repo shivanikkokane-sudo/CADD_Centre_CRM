@@ -90,6 +90,7 @@ def get_enquiry(enquiry_id):
 
 
 def create_enquiry(data):
+    data["telegram_sent"] = False
     duplicate = find_enquiry_by_phone(data["phone"])
     if duplicate:
         raise DuplicateEnquiryError(duplicate)
@@ -162,6 +163,7 @@ def add_followup(enquiry, followup_type, response, remarks, next_followup_dateti
         "last_followup_date": now,
         "next_followup_datetime": next_followup_datetime,
         "updated_by": user_id,
+        "telegram_sent": False,
     }
     if status == "Joined" and enquiry.get("status") != "Joined":
         update.update(
