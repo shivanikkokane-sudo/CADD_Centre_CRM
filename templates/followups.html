@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Follow-ups · Skillverse CRM{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Daily workflow</p><h1>Follow-ups</h1></div></div>
+<div class="tabs"><a class="{{ 'active' if selected_filter=='today' }}" href="{{ url_for('followups', filter='today') }}">Today</a><a class="{{ 'active' if selected_filter=='overdue' }}" href="{{ url_for('followups', filter='overdue') }}">Overdue</a><a class="{{ 'active' if selected_filter=='upcoming' }}" href="{{ url_for('followups', filter='upcoming') }}">Next 7 days</a><a class="{{ 'active' if selected_filter=='active' }}" href="{{ url_for('followups', filter='active') }}">All active</a></div>
+<section class="panel flush"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Phone</th><th>Course</th><th>Status</th><th>Scheduled</th><th>Action</th></tr></thead><tbody>
+{% for row in enquiries %}<tr><td><a class="student-link" href="{{ url_for('enquiry_detail', enquiry_id=row.id) }}">{{ row.student_name }}</a></td><td>{{ row.phone }}</td><td>{{ row.course_interest }}</td><td><span class="pill">{{ row.status }}</span></td><td>{{ (row.next_followup_datetime or 'Not scheduled')|replace('T',' ') }}</td><td><div class="row-actions"><a href="{{ url_for('edit_enquiry', enquiry_id=row.id) }}">Edit</a><a class="table-action" href="{{ url_for('add_followup', enquiry_id=row.id) }}">Record follow-up</a></div></td></tr>{% else %}<tr><td colspan="6"><div class="empty">No follow-ups in this view.</div></td></tr>{% endfor %}
+</tbody></table></div></section>
+{% endblock %}

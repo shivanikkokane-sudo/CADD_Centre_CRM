@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ enquiry.student_name }} · Skillverse CRM{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Enquiry #{{ enquiry.id }}</p><h1>{{ enquiry.student_name }}</h1><p class="muted">{{ enquiry.phone }} · {{ enquiry.course_interest }}</p></div><div class="actions"><a class="secondary" href="{{ url_for('edit_enquiry', enquiry_id=enquiry.id) }}">Edit</a><a class="primary" href="{{ url_for('add_followup', enquiry_id=enquiry.id) }}">+ Follow-up</a></div></div>
+<div class="detail-layout">
+  <section class="panel"><div class="panel-head"><h2>Lead overview</h2><span class="pill {{ enquiry.status|lower|replace(' ', '-') }}">{{ enquiry.status }}</span></div>
+    <dl class="details"><div><dt>Course</dt><dd>{{ enquiry.course_interest }}</dd></div><div><dt>Course fee</dt><dd>{% if enquiry.course_fee %}₹{{ '{:,.0f}'.format(enquiry.course_fee|float) }}{% else %}Not entered{% endif %}</dd></div><div><dt>Decision maker</dt><dd>{{ enquiry.decision_maker or 'Not Specified' }}</dd></div><div><dt>Budget</dt><dd>{{ enquiry.budget_range or 'Not Discussed' }}</dd></div><div><dt>Planning to start</dt><dd>{{ enquiry.planning_to_start or 'Not Specified' }}</dd></div><div><dt>Demo attended</dt><dd>{{ 'Yes' if enquiry.demo_attended else 'No' }}</dd></div><div><dt>Source</dt><dd>{{ enquiry.source }}</dd></div><div><dt>Counsellor</dt><dd>{{ enquiry.counsellor }}</dd></div><div><dt>Next follow-up</dt><dd>{{ (enquiry.next_followup_datetime or 'Not scheduled')|replace('T',' ') }}</dd></div><div><dt>Centre</dt><dd>{{ centre }}</dd></div></dl>
+    {% if enquiry.remarks %}<div class="note"><strong>Latest remarks</strong><p>{{ enquiry.remarks }}</p></div>{% endif %}
+  </section>
+  <section class="panel"><div class="panel-head"><div><h2>Follow-up history</h2><p class="muted">A complete record of interactions</p></div></div>
+    <div class="timeline">{% for item in history %}<article><span></span><div><div class="timeline-head"><strong>{{ item.followup_type }}</strong><time>{{ (item.followup_date or '')|replace('T',' ') }}</time></div><p>{{ item.response }} · <b>{{ item.response_status }}</b></p>{% if item.remarks %}<p class="muted">{{ item.remarks }}</p>{% endif %}<small>{{ item.counsellor }}</small></div></article>{% else %}<div class="empty">No follow-ups recorded yet.</div>{% endfor %}</div>
+  </section>
+</div>
+{% endblock %}

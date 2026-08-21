@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Users · Skillverse CRM{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Administration</p><h1>Users</h1><p class="muted">Everyone signs in with their own account.</p></div></div>
+<div class="detail-layout"><section class="panel"><h2>Create user</h2><form method="post" class="stack-form"><input type="hidden" name="csrf_token" value="{{ session.csrf_token }}"><label>Full name<input name="full_name" required></label><label>Username<input name="username" required></label><label>Password<input type="password" name="password" minlength="8" required></label><label>Role<select name="role"><option value="counsellor">Counsellor</option><option value="admin">Admin</option></select></label><button class="primary" type="submit">Create user</button></form></section><section class="panel"><h2>Dadar team</h2><div class="user-list">{% for user in users %}<article><span>{{ user.full_name[0] }}</span><div><strong>{{ user.full_name }}</strong><small>@{{ user.username }} · {{ user.role|title }}</small></div><span class="status-dot {{ 'on' if user.is_active }}"></span></article>{% endfor %}</div></section></div>
+{% endblock %}

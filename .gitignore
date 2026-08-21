@@ -1,4 +1,8 @@
 .env
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv-web/
 crm_reminder_engine/.env
 __pycache__/
 *.pyc

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Follow-up · {{ enquiry.student_name }}{% endblock %}
+{% block content %}
+<div class="page-head"><div><p class="eyebrow">Record interaction</p><h1>Follow up with {{ enquiry.student_name }}</h1><p class="muted">{{ enquiry.phone }} · {{ enquiry.course_interest }}</p></div></div>
+<form method="post" class="panel form-panel narrow">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  <div class="form-grid">
+    <label>Follow-up type<select name="followup_type">{% for x in ['Phone Call','WhatsApp','Walk-in','Demo','Email','Other'] %}<option>{{ x }}</option>{% endfor %}</select></label>
+    <label>Student response<select name="response">{% for x in ['Interested','Call Back Later','Demo Scheduled','Demo Attended','Fee Concern','Not Interested','No Response','Joined'] %}<option>{{ x }}</option>{% endfor %}</select></label>
+    <label>Status<select name="status" id="followup-status" onchange="toggleJoinedFields()">{% for x in statuses %}<option {% if enquiry.status==x %}selected{% endif %}>{{ x }}</option>{% endfor %}</select><small>Choose Joined only after confirming the course and fee.</small></label>
+    <div id="joined-fields" class="joined-fields span-2">
+      <label>Confirmed course<select name="joined_course" id="joined-course">{% for x in courses if x != 'Not Decided' %}<option {% if enquiry.course_interest==x %}selected{% endif %}>{{ x }}</option>{% endfor %}</select></label>
+      <label>Confirmed course fee (₹)<input type="number" name="joined_course_fee" id="joined-course-fee" min="1" step="1" value="{{ enquiry.course_fee or '' }}"></label>
+    </div>
+    <label>Next follow-up date<input type="date" name="next_followup_date"></label>
+    <label>Next follow-up time<input type="time" name="next_followup_time" value="10:00"></label>
+    <label class="span-2">Remarks<textarea name="remarks" rows="5" required></textarea></label>
+  </div>
+  <div class="form-actions"><a class="secondary" href="{{ url_for('enquiry_detail', enquiry_id=enquiry.id) }}">Cancel</a><button class="primary" type="submit">Save follow-up</button></div>
+</form>
+<script>
+function toggleJoinedFields() {
+  const joined = document.getElementById('followup-status').value === 'Joined';
+  document.getElementById('joined-fields').classList.toggle('visible', joined);
+  document.getElementById('joined-course').required = joined;
+  document.getElementById('joined-course-fee').required = joined;
+}
+toggleJoinedFields();
+</script>
+{% endblock %}

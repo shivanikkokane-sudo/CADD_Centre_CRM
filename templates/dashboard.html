@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Skillverse CRM{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">{{ centre }} Centre</p><h1>Good to see you, {{ session.get('full_name').split()[0] }}</h1><p class="muted">Here is what needs attention today.</p></div>
+  <a class="primary" href="{{ url_for('new_enquiry') }}">+ New enquiry</a>
+</div>
+<section class="stats">
+  <a class="stat" href="{{ url_for('enquiries') }}"><span>Total enquiries</span><strong>{{ total }}</strong></a>
+  <a class="stat accent" href="{{ url_for('enquiries', filter='active') }}"><span>Active leads</span><strong>{{ active }}</strong></a>
+  <a class="stat warning" href="{{ url_for('followups', filter='overdue') }}"><span>Due / overdue</span><strong>{{ due }}</strong></a>
+  <a class="stat success" href="{{ url_for('enquiries', filter='joined') }}"><span>Joined students</span><strong>{{ joined }}</strong></a>
+</section>
+<section class="panel">
+  <div class="panel-head"><div><h2>Follow-ups needing attention</h2><p class="muted">Due today and overdue</p></div><a href="{{ url_for('followups', filter='overdue') }}">View all →</a></div>
+  {% if due_enquiries %}
+  <div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Status</th><th>Next follow-up</th><th></th></tr></thead><tbody>
+  {% for row in due_enquiries %}<tr><td><strong>{{ row.student_name }}</strong><small>{{ row.phone }}</small></td><td>{{ row.course_interest }}</td><td><span class="pill">{{ row.status }}</span></td><td>{{ (row.next_followup_datetime or '')|replace('T', ' ') }}</td><td><a href="{{ url_for('add_followup', enquiry_id=row.id) }}">Follow up</a></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty"><strong>You are all caught up.</strong><p>No follow-ups are currently due.</p></div>{% endif %}
+</section>
+{% endblock %}
