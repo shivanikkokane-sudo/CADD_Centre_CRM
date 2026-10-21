@@ -34,7 +34,7 @@ app.config.update(
 )
 
 CENTRE = "Dadar"
-STATUSES = ["New", "Interested", "Demo Scheduled", "Demo Attended", "Joined", "Closed"]
+STATUSES = ["New", "Interested", "Demo Scheduled", "Demo Attended", "Hold", "Joined", "Closed"]
 SOURCES = [
     "CADD Centre Corporate",
     "Walkin",
@@ -371,6 +371,16 @@ def add_followup(enquiry_id):
         next_time = request.form.get("next_followup_time", "")
         next_at = f"{next_date}T{next_time}:00" if next_date and next_time else None
         status = request.form.get("status", enquiry.get("status", "New"))
+        remarks = request.form.get("remarks", "").strip()
+        if status not in STATUSES:
+            abort(400, "Choose a valid status.")
+        if status == "Closed":
+            closure_reason = request.form.get("closure_reason", "").strip()
+            if not closure_reason:
+                flash("Enter a reason for closing this enquiry.", "error")
+                return render_template("followup_form.html", enquiry=enquiry), 400
+            next_at = None
+            remarks = f"Closure reason: {closure_reason}" + (f"\n\n{remarks}" if remarks else "")
         joined_course = None
         joined_course_fee = None
         if status == "Joined":
@@ -386,7 +396,7 @@ def add_followup(enquiry_id):
             enquiry=enquiry,
             followup_type=request.form.get("followup_type", "Call"),
             response=request.form.get("response", ""),
-            remarks=request.form.get("remarks", ""),
+            remarks=remarks,
             next_followup_datetime=next_at,
             status=status,
             user_id=session["user_id"],

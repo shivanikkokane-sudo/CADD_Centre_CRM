@@ -5,3 +5,4 @@
 .joined-fields{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 20px;padding:18px;border-radius:10px;background:#f1f8f4;border:1px solid #cfe9dc}.joined-fields.visible{display:grid}
 .row-actions{display:flex;align-items:center;gap:13px}.row-actions a:first-child{color:#4e596b}
 .monthly-enquiries{margin-bottom:22px}.monthly-enquiries .toolbar{align-items:center}
+.form-panel [hidden]{display:none!important}
