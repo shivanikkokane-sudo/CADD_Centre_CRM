@@ -3,6 +3,7 @@ import re
 import secrets
 from datetime import datetime
 from functools import wraps
+from zoneinfo import ZoneInfo
 
 import click
 from dotenv import load_dotenv
@@ -114,13 +115,14 @@ def csrf_protection():
         abort(400, "Invalid form token. Refresh the page and try again.")
 
 
-def visible_enquiries(filter_name="all", search=""):
+def visible_enquiries(filter_name="all", search="", month=None):
     assigned_user_id = None if session.get("role") == "admin" else session["user_id"]
     return db.list_enquiries(
         filter_name=filter_name,
         search=search,
         centre=CENTRE,
         assigned_user_id=assigned_user_id,
+        month=month,
     )
 
 
@@ -195,6 +197,14 @@ def logout():
 @app.get("/dashboard")
 @login_required
 def dashboard():
+    selected_month = request.args.get("month", datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%Y-%m"))
+    if not re.fullmatch(r"[0-9]{4}-(0[1-9]|1[0-2])", selected_month):
+        abort(400, "Choose a valid month.")
+    try:
+        month_date = datetime.strptime(selected_month, "%Y-%m")
+    except ValueError:
+        abort(400, "Choose a valid month.")
+    monthly_enquiries = visible_enquiries(month=selected_month)
     enquiries = visible_enquiries()
     today = datetime.now().date().isoformat()
     active = [row for row in enquiries if row.get("status") not in ("Joined", "Closed")]
@@ -211,6 +221,9 @@ def dashboard():
         due=len(due),
         joined=sum(row.get("status") == "Joined" for row in enquiries),
         due_enquiries=due[:8],
+        selected_month=selected_month,
+        month_label=month_date.strftime("%B %Y"),
+        monthly_enquiries=monthly_enquiries,
     )
 
 

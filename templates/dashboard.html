@@ -11,6 +11,20 @@
   <a class="stat warning" href="{{ url_for('followups', filter='overdue') }}"><span>Due / overdue</span><strong>{{ due }}</strong></a>
   <a class="stat success" href="{{ url_for('enquiries', filter='joined') }}"><span>Joined students</span><strong>{{ joined }}</strong></a>
 </section>
+<section class="panel monthly-enquiries">
+  <div class="panel-head"><div><h2>Monthly enquiries</h2><p class="muted">{{ month_label }} · {{ monthly_enquiries|length }} enquiries · Based on enquiry date</p></div></div>
+  <form class="toolbar" method="get" action="{{ url_for('dashboard') }}">
+    <label for="enquiry-month">Month</label>
+    <input id="enquiry-month" type="month" name="month" value="{{ selected_month }}" required>
+    <button type="submit">View month</button>
+    <a class="secondary" href="{{ url_for('dashboard') }}">Current month</a>
+  </form>
+  {% if monthly_enquiries %}
+  <div class="table-wrap"><table><thead><tr><th>Enquiry date</th><th>Student</th><th>Course</th><th>Status</th><th></th></tr></thead><tbody>
+  {% for row in monthly_enquiries %}<tr><td>{{ row.enquiry_date }}</td><td><a href="{{ url_for('enquiry_detail', enquiry_id=row.id) }}"><strong>{{ row.student_name }}</strong></a><small>{{ row.phone }}</small></td><td>{{ row.course_interest }}</td><td><span class="pill">{{ row.status }}</span></td><td><a href="{{ url_for('enquiry_detail', enquiry_id=row.id) }}">View enquiry</a></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty">No enquiries for {{ month_label }}.</div>{% endif %}
+</section>
 <section class="panel">
   <div class="panel-head"><div><h2>Follow-ups needing attention</h2><p class="muted">Due today and overdue</p></div><a href="{{ url_for('followups', filter='overdue') }}">View all →</a></div>
   {% if due_enquiries %}

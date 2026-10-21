@@ -58,10 +58,15 @@ def list_counsellors(centre="Dadar"):
     return client.table("crm_users").select("id,full_name").eq("centre", centre).eq("is_active", True).in_("role", ["admin", "counsellor"]).order("full_name").execute().data
 
 
-def list_enquiries(filter_name="all", search="", centre="Dadar", assigned_user_id=None):
+def list_enquiries(filter_name="all", search="", centre="Dadar", assigned_user_id=None, month=None):
     query = client.table("enquiries").select("*").eq("Nearest_CADD_Centre", centre)
     if assigned_user_id is not None:
         query = query.eq("assigned_user_id", assigned_user_id)
+    if month:
+        month_start = datetime.strptime(month, "%Y-%m").date()
+        # An exclusive upper bound includes the entire final day of the month.
+        month_end = (month_start.replace(day=28) + timedelta(days=4)).replace(day=1)
+        query = query.gte("enquiry_date", month_start.isoformat()).lt("enquiry_date", month_end.isoformat())
 
     today = datetime.now().date()
     today_start = f"{today.isoformat()}T00:00:00"
@@ -81,7 +86,15 @@ def list_enquiries(filter_name="all", search="", centre="Dadar", assigned_user_i
     if search:
         safe = search.replace(",", " ")
         query = query.or_(f"student_name.ilike.%{safe}%,phone.ilike.%{safe}%,course_interest.ilike.%{safe}%")
-    return query.order("id", desc=True).execute().data
+    query = query.order("id", desc=True)
+    if month:
+        rows = []
+        while True:
+            page = query.range(len(rows), len(rows) + 499).execute().data
+            rows.extend(page)
+            if len(page) < 500:
+                return rows
+    return query.execute().data
 
 
 def get_enquiry(enquiry_id):
