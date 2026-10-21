@@ -32,6 +32,7 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
           SNEHA_CHAT_ID: ${{ secrets.SNEHA_CHAT_ID }}
+          OFFICE_CHAT_ID: ${{ secrets.OFFICE_CHAT_ID }}
 
         run: |
           cd crm_reminder_engine
