@@ -1515,6 +1515,7 @@ course_entry = ttk.Combobox(
     values=(
 
         "AutoCAD",
+        "AutoCAD Electrical",
         "Solidworks",
         "Revit Architecture",
         "3DS Max",

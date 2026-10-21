@@ -65,6 +65,7 @@ START_PLANS = [
 ]
 COURSES = [
     "AutoCAD",
+    "AutoCAD Electrical",
     "Solidworks",
     "Revit Architecture",
     "3DS Max",
