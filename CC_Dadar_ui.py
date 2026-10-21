@@ -1519,6 +1519,14 @@ course_entry = ttk.Combobox(
         "Revit Architecture",
         "3DS Max",
         "Google Sketchup",
+        "CATIA",
+        "Python",
+        "Data Analytics",
+        "C/C++",
+        "JAVA",
+        "NxCAD",
+        "Ansys Workbench",
+        "Ansys Fluent",
         "Not Decided"
     )
 )

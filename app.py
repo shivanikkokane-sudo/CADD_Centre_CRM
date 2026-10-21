@@ -69,6 +69,14 @@ COURSES = [
     "Revit Architecture",
     "3DS Max",
     "Google SketchUp",
+    "CATIA",
+    "Python",
+    "Data Analytics",
+    "C/C++",
+    "JAVA",
+    "NxCAD",
+    "Ansys Workbench",
+    "Ansys Fluent",
     "Not Decided",
 ]
 
