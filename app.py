@@ -80,6 +80,9 @@ COURSES = [
     "NxCAD",
     "Ansys Workbench",
     "Ansys Fluent",
+    "StaadPro/Etabs",
+    "BIM",
+    "AutoCAD Civil 3D",
     "Not Decided",
 ]
 
