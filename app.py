@@ -115,8 +115,19 @@ def csrf_protection():
         abort(400, "Invalid form token. Refresh the page and try again.")
 
 
+def can_view_centre_enquiries():
+    if session.get("role") == "admin":
+        return True
+    # Existing sessions predate the username field; support Mitali's display name
+    # until she signs in again. This grants read access only.
+    username = session.get("username", "").strip().casefold()
+    name = session.get("full_name", "").strip().casefold().split()
+    is_mitali = username == "mitali" or bool(name and name[0] == "mitali")
+    return bool(session.get("user_id") and session.get("centre") == CENTRE and is_mitali)
+
+
 def visible_enquiries(filter_name="all", search="", month=None):
-    assigned_user_id = None if session.get("role") == "admin" else session["user_id"]
+    assigned_user_id = None if can_view_centre_enquiries() else session["user_id"]
     return db.list_enquiries(
         filter_name=filter_name,
         search=search,
@@ -127,7 +138,15 @@ def visible_enquiries(filter_name="all", search="", month=None):
 
 
 def can_access(enquiry):
-    return session.get("role") == "admin" or str(enquiry.get("assigned_user_id")) == str(
+    return can_manage_enquiry(enquiry) or (
+        can_view_centre_enquiries() and enquiry.get("Nearest_CADD_Centre") == CENTRE
+    )
+
+
+def can_manage_enquiry(enquiry):
+    if enquiry.get("Nearest_CADD_Centre") != CENTRE:
+        return False
+    return session.get("role") == "admin" or bool(session.get("user_id")) and str(enquiry.get("assigned_user_id")) == str(
         session.get("user_id")
     )
 
@@ -157,6 +176,7 @@ def shared_template_data():
         "budget_ranges": BUDGET_RANGES,
         "start_plans": START_PLANS,
         "courses": COURSES,
+        "can_manage_enquiry": can_manage_enquiry,
     }
 
 
@@ -181,6 +201,7 @@ def login():
             session.update(
                 user_id=user["id"],
                 full_name=user["full_name"],
+                username=user.get("username", ""),
                 role=user["role"],
                 centre=user.get("centre") or CENTRE,
             )
@@ -302,7 +323,7 @@ def edit_enquiry(enquiry_id):
     enquiry = db.get_enquiry(enquiry_id)
     if not enquiry:
         abort(404)
-    if not can_access(enquiry):
+    if not can_manage_enquiry(enquiry):
         abort(403)
     counsellors = db.list_counsellors(CENTRE)
     if request.method == "POST":
@@ -338,7 +359,7 @@ def add_followup(enquiry_id):
     enquiry = db.get_enquiry(enquiry_id)
     if not enquiry:
         abort(404)
-    if not can_access(enquiry):
+    if not can_manage_enquiry(enquiry):
         abort(403)
     if request.method == "POST":
         next_date = request.form.get("next_followup_date", "")

@@ -29,7 +29,7 @@
   <div class="panel-head"><div><h2>Follow-ups needing attention</h2><p class="muted">Due today and overdue</p></div><a href="{{ url_for('followups', filter='overdue') }}">View all →</a></div>
   {% if due_enquiries %}
   <div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Status</th><th>Next follow-up</th><th></th></tr></thead><tbody>
-  {% for row in due_enquiries %}<tr><td><strong>{{ row.student_name }}</strong><small>{{ row.phone }}</small></td><td>{{ row.course_interest }}</td><td><span class="pill">{{ row.status }}</span></td><td>{{ (row.next_followup_datetime or '')|replace('T', ' ') }}</td><td><a href="{{ url_for('add_followup', enquiry_id=row.id) }}">Follow up</a></td></tr>{% endfor %}
+  {% for row in due_enquiries %}<tr><td><strong>{{ row.student_name }}</strong><small>{{ row.phone }}</small></td><td>{{ row.course_interest }}</td><td><span class="pill">{{ row.status }}</span></td><td>{{ (row.next_followup_datetime or '')|replace('T', ' ') }}</td><td>{% if can_manage_enquiry(row) %}<a href="{{ url_for('add_followup', enquiry_id=row.id) }}">Follow up</a>{% else %}<a href="{{ url_for('enquiry_detail', enquiry_id=row.id) }}">View enquiry</a>{% endif %}</td></tr>{% endfor %}
   </tbody></table></div>
   {% else %}<div class="empty"><strong>You are all caught up.</strong><p>No follow-ups are currently due.</p></div>{% endif %}
 </section>
