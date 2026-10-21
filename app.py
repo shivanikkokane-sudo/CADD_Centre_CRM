@@ -36,6 +36,7 @@ app.config.update(
 CENTRE = "Dadar"
 STATUSES = ["New", "Interested", "Demo Scheduled", "Demo Attended", "Joined", "Closed"]
 SOURCES = [
+    "CADD Centre Corporate",
     "Walkin",
     "Google Search",
     "Justdial",
