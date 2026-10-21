@@ -34,7 +34,7 @@ app.config.update(
 )
 
 CENTRE = "Dadar"
-STATUSES = ["New", "Interested", "Demo Scheduled", "Demo Attended", "Hold", "Joined", "Closed"]
+STATUSES = ["New", "Interested", "Demo Scheduled", "Demo Attended", "On Hold", "Joined", "Closed"]
 SOURCES = [
     "CADD Centre Corporate",
     "Walkin",
