@@ -71,6 +71,7 @@ COURSES = [
     "AutoCAD Electrical",
     "Solidworks",
     "Revit Architecture",
+    "Revit MEP",
     "3DS Max",
     "Google SketchUp",
     "CATIA",

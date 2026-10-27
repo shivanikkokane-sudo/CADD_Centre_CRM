@@ -1519,6 +1519,7 @@ course_entry = ttk.Combobox(
         "AutoCAD Electrical",
         "Solidworks",
         "Revit Architecture",
+        "Revit MEP",
         "3DS Max",
         "Google Sketchup",
         "CATIA",
