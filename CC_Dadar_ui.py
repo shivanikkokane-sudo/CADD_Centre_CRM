@@ -1481,6 +1481,7 @@ source_entry = ttk.Combobox(
         "Tele",
         "Meta Ads",
         "Walkin",
+        "UrbanPro",
         "CADD Centre Corporate",
         "Friend Reference"
 
